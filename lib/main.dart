@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:segundo_projeto/screens/form_screen.dart';
 import 'package:segundo_projeto/screens/screen.dart';
 
 
@@ -14,9 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Segundo projeto',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
-      home: const Screen(),
+      home: const FormScreen(),
     );
   }
 }

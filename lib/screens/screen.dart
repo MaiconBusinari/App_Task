@@ -28,29 +28,29 @@ class _ScreenState extends State<Screen> {
           child: ListView(
             children: const [
               Task(
-                  "Aprendendo Dart",
-                  'assets/images/coruja_1.jpg',
-                  0),
+                  nome: "Aprendendo Dart",
+                  foto: 'assets/images/coruja_1.jpg',
+                  dificuldade: 0),
               Task(
-                  "Aprendendo Fluttter",
-                  'assets/images/coruja_2.jpg',
-                  1),
+                  nome: "Aprendendo Fluttter",
+                  foto: 'assets/images/coruja_2.jpg',
+                  dificuldade: 1),
               Task(
-                  "Aprendendo Node",
-                  'assets/images/coruja_3.jpg',
-                  2),
+                  nome: "Aprendendo Node",
+                  foto: 'assets/images/coruja_3.jpg',
+                  dificuldade: 2),
               Task(
-                  "Aprendendo Dart",
-                  'assets/images/coruja_1.jpg',
-                  3),
+                  nome: "Aprendendo Dart",
+                  foto: 'assets/images/coruja_1.jpg',
+                  dificuldade: 3),
               Task(
-                  "Aprendendo Fluttter",
-                  'assets/images/coruja_2.jpg',
-                  4),
+                  nome: "Aprendendo Fluttter",
+                  foto: 'assets/images/coruja_2.jpg',
+                  dificuldade: 4),
               Task(
-                  "Aprendendo Node",
-                  'assets/images/coruja_3.jpg',
-                  5),
+                  nome: "Aprendendo Node",
+                  foto: 'assets/images/coruja_3.jpg',
+                  dificuldade: 5),
               SizedBox( height: 80)
             ],
           ),
