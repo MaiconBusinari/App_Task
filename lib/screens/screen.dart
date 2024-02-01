@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:segundo_projeto/components/task.dart';
-
+import '../data/task_inherited.dart';
+import 'form_screen.dart';
 
 class Screen extends StatefulWidget {
   const Screen({super.key});
@@ -11,59 +10,34 @@ class Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<Screen> {
-  bool opacidade = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: Container(),
-        title: const Text("Segundo projeto"),
+        title: const Text("Tarefas"),
       ),
       body: Container(
         color: Colors.white10,
-        child: AnimatedOpacity(
-          opacity: opacidade ? 1 : 0,
-          duration: const Duration(milliseconds: 300),
-          child: ListView(
-            children: const [
-              Task(
-                  nome: "Aprendendo Dart",
-                  foto: 'assets/images/coruja_1.jpg',
-                  dificuldade: 0),
-              Task(
-                  nome: "Aprendendo Fluttter",
-                  foto: 'assets/images/coruja_2.jpg',
-                  dificuldade: 1),
-              Task(
-                  nome: "Aprendendo Node",
-                  foto: 'assets/images/coruja_3.jpg',
-                  dificuldade: 2),
-              Task(
-                  nome: "Aprendendo Dart",
-                  foto: 'assets/images/coruja_1.jpg',
-                  dificuldade: 3),
-              Task(
-                  nome: "Aprendendo Fluttter",
-                  foto: 'assets/images/coruja_2.jpg',
-                  dificuldade: 4),
-              Task(
-                  nome: "Aprendendo Node",
-                  foto: 'assets/images/coruja_3.jpg',
-                  dificuldade: 5),
-              SizedBox( height: 80)
-            ],
-          ),
+        child: ListView(
+          padding: const EdgeInsets.only(bottom: 75),
+          children: TaskInherited.of(context).taskList,
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            opacidade = !opacidade;
-          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (contextNew) => FormScreen(
+                taskContext: context,
+              ),
+            ),
+          );
         },
-        child: const Icon(Icons.remove_red_eye),
+        child: const Icon(Icons.add),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

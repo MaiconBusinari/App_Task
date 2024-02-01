@@ -6,17 +6,33 @@ class Task extends StatefulWidget {
   final String foto;
   final int dificuldade;
 
-  const Task({required this.nome,required this.foto,required this.dificuldade, super.key});
+  Task({required this.nome,required this.foto,required this.dificuldade, super.key});
+
+  int nivel = 0;
+  double apresentar = 0;
+  bool taskComplete = false;
+  Color cor = Colors.blue;
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  int nivel = 0;
-  double apresentar = 0;
-  bool taskComplete = false;
-  Color cor = Colors.blue;
+
+  bool assetOrNetwork(){
+    if(widget.foto.contains('http')){
+      return false;
+    }
+    return true;
+  }
+
+  Image imageError(){
+    return Image.asset(
+      "assets/images/homer.jpg",
+      fit: BoxFit.cover,
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +43,7 @@ class _TaskState extends State<Task> {
           Container(
             height: 150,
             decoration: BoxDecoration(
-                color: cor,
+                color: widget.cor,
                 borderRadius: BorderRadius.circular(8)),
           ),
           Column(
@@ -48,9 +64,18 @@ class _TaskState extends State<Task> {
                           borderRadius: BorderRadius.circular(8)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
+                        child: (assetOrNetwork()) ? Image.asset(
                           widget.foto,
                           fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return imageError();
+                          },
+                        ) : Image.network(
+                          widget.foto,
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return imageError();
+                          },
                         ),
                       ),
                     ),
@@ -78,38 +103,39 @@ class _TaskState extends State<Task> {
                             onPressed: () {
                               setState(() {
                                 //Verificação se a tarefa foi concluida
-                                if(taskComplete == false){
-                                  nivel++;
+                                if(widget.taskComplete == false){
+                                  widget.nivel++;
                                   //Calculando a porcentagem concluida da tarefa
-                                  apresentar = ((nivel/widget.dificuldade)/10 * 100)/1;
+                                  widget.apresentar = ((widget.nivel/widget.dificuldade)/10 * 100)/1;
                                 }
                                 //Verificando nivel de atividade é igual a zero e escolhendo sua cor
                                 if(widget.dificuldade == 0){
-                                  taskComplete = true;
-                                  cor = const Color(0xFFEA6991);
+                                  widget.taskComplete = true;
+                                  widget.cor = const Color(0xFFEA6991);
                                 }
                                 //Escolhenco cores baseado na dificuldade para quando a atividade foi concluida
                                 if (widget.dificuldade != 0 &&
-                                    (nivel / widget.dificuldade) / 10 == 1) {
+                                    //verificando se a terefa está completa
+                                    (widget.nivel / widget.dificuldade) / 10 == 1) {
                                     var command = widget.dificuldade;
                                     switch (command){
                                       case 1:
-                                        cor = Colors.green;
+                                        widget.cor = Colors.green;
                                         break;
                                       case 2:
-                                        cor = Colors.orange;
+                                        widget.cor = Colors.orange;
                                         break;
                                       case 3:
-                                        cor = Colors.yellow;
+                                        widget.cor = Colors.yellow;
                                         break;
                                       case 4:
-                                        cor = Colors.red;
+                                        widget.cor = Colors.red;
                                         break;
                                       case 5:
-                                        cor = Colors.brown;
+                                        widget.cor = Colors.brown;
                                         break;
                                     }
-                                  taskComplete = true;
+                                  widget.taskComplete = true;
                                 }
                               });
                             },
@@ -140,7 +166,7 @@ class _TaskState extends State<Task> {
                         child: LinearProgressIndicator(
                           color: Colors.white,
                           value: (widget.dificuldade > 0)
-                              ? (nivel / widget.dificuldade) / 10
+                              ? (widget.nivel / widget.dificuldade) / 10
                               : 1,
                         ),
                       ),
@@ -148,7 +174,7 @@ class _TaskState extends State<Task> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        taskComplete? "Concluido": "Realizado: ${apresentar.toStringAsFixed(1)}%",
+                        widget.taskComplete? "Concluido": "Realizado: ${widget.apresentar.toStringAsFixed(1)}%",
                         style: const TextStyle(fontSize: 20),
                       ),
                     )
