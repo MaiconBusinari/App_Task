@@ -26,14 +26,7 @@ class _ScreenState extends State<Screen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (contextNew) => FormScreen(
-                taskContext: context,
-              ),
-            ),
-          );
+          Navigator.of(context).pushNamed('/formScreen');
         },
         child: const Icon(Icons.add),
       ),

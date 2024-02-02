@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:segundo_projeto/data/task_inherited.dart';
 import 'package:segundo_projeto/screens/screen.dart';
 
+import 'screens/form_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +19,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: TaskInherited(child: Screen()),
+      initialRoute: "/login",
+      routes: {
+        '/login': (context) => TaskInherited(child: Screen()),
+        '/formScreen': (context) => FormScreen(taskContext: context)
+      },
     );
   }
 }
