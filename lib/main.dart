@@ -19,11 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      initialRoute: "/login",
-      routes: {
-        '/login': (context) => TaskInherited(child: Screen()),
-        '/formScreen': (context) => FormScreen(taskContext: context)
-      },
+      home: Screen(),
     );
   }
 }

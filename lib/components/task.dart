@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:segundo_projeto/data/task_dao.dart';
 import 'difficulty.dart';
 
 class Task extends StatefulWidget {
   final String nome;
   final String foto;
   final int dificuldade;
-
-  Task({required this.nome,required this.foto,required this.dificuldade, super.key});
-
-  int nivel = 0;
-  double apresentar = 0;
+  int nivel;
+  double apresentar;
   bool taskComplete = false;
+
+  Task(
+      {required this.nome,
+      required this.foto,
+      required this.dificuldade,
+      required this.nivel,
+      required this.apresentar,
+      required this.taskComplete,
+      super.key});
+
   Color cor = Colors.blue;
 
   @override
@@ -18,21 +26,19 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
-
-  bool assetOrNetwork(){
-    if(widget.foto.contains('http')){
+  bool assetOrNetwork() {
+    if (widget.foto.contains('http')) {
       return false;
     }
     return true;
   }
 
-  Image imageError(){
+  Image imageError() {
     return Image.asset(
       "assets/images/homer.jpg",
       fit: BoxFit.cover,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +49,7 @@ class _TaskState extends State<Task> {
           Container(
             height: 150,
             decoration: BoxDecoration(
-                color: widget.cor,
-                borderRadius: BorderRadius.circular(8)),
+                color: widget.cor, borderRadius: BorderRadius.circular(8)),
           ),
           Column(
             children: [
@@ -64,19 +69,23 @@ class _TaskState extends State<Task> {
                           borderRadius: BorderRadius.circular(8)),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: (assetOrNetwork()) ? Image.asset(
-                          widget.foto,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                            return imageError();
-                          },
-                        ) : Image.network(
-                          widget.foto,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                            return imageError();
-                          },
-                        ),
+                        child: (assetOrNetwork())
+                            ? Image.asset(
+                                widget.foto,
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context,
+                                    Object error, StackTrace? stackTrace) {
+                                  return imageError();
+                                },
+                              )
+                            : Image.network(
+                                widget.foto,
+                                fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context,
+                                    Object error, StackTrace? stackTrace) {
+                                  return imageError();
+                                },
+                              ),
                       ),
                     ),
                     Column(
@@ -100,44 +109,58 @@ class _TaskState extends State<Task> {
                         height: 52,
                         width: 52,
                         child: ElevatedButton(
-                            onPressed: () {
+                            onLongPress: () async {
+                              ScaffoldMessenger.of(context).showSnackBar( const SnackBar(content: Text('Tarefa deletada')));
+                              await TaskDao().delete(widget.nome);
+                              setState((){
+                              });
+                            },
+                            onPressed: () async {
                               setState(() {
                                 //Verificação se a tarefa foi concluida
-                                if(widget.taskComplete == false){
+                                if (widget.taskComplete == false) {
                                   widget.nivel++;
                                   //Calculando a porcentagem concluida da tarefa
-                                  widget.apresentar = ((widget.nivel/widget.dificuldade)/10 * 100)/1;
+                                  widget.apresentar =
+                                      ((widget.nivel / widget.dificuldade) /
+                                              10 *
+                                              100) /
+                                          1;
                                 }
                                 //Verificando nivel de atividade é igual a zero e escolhendo sua cor
-                                if(widget.dificuldade == 0){
+                                if (widget.dificuldade == 0) {
                                   widget.taskComplete = true;
                                   widget.cor = const Color(0xFFEA6991);
                                 }
                                 //Escolhenco cores baseado na dificuldade para quando a atividade foi concluida
                                 if (widget.dificuldade != 0 &&
                                     //verificando se a terefa está completa
-                                    (widget.nivel / widget.dificuldade) / 10 == 1) {
-                                    var command = widget.dificuldade;
-                                    switch (command){
-                                      case 1:
-                                        widget.cor = Colors.green;
-                                        break;
-                                      case 2:
-                                        widget.cor = Colors.orange;
-                                        break;
-                                      case 3:
-                                        widget.cor = Colors.yellow;
-                                        break;
-                                      case 4:
-                                        widget.cor = Colors.red;
-                                        break;
-                                      case 5:
-                                        widget.cor = Colors.brown;
-                                        break;
-                                    }
+                                    (widget.nivel / widget.dificuldade) / 10 ==
+                                        1) {
+                                  var command = widget.dificuldade;
+                                  switch (command) {
+                                    case 1:
+                                      widget.cor = Colors.green;
+                                      break;
+                                    case 2:
+                                      widget.cor = Colors.orange;
+                                      break;
+                                    case 3:
+                                      widget.cor = Colors.yellow;
+                                      break;
+                                    case 4:
+                                      widget.cor = Colors.red;
+                                      break;
+                                    case 5:
+                                      widget.cor = Colors.brown;
+                                      break;
+                                  }
                                   widget.taskComplete = true;
                                 }
+
                               });
+                              await TaskDao().save(Task(nome: widget.nome, foto: widget.foto, dificuldade: widget.dificuldade, nivel: widget.nivel, apresentar: widget.apresentar, taskComplete: widget.taskComplete));
+
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -174,7 +197,9 @@ class _TaskState extends State<Task> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        widget.taskComplete? "Concluido": "Realizado: ${widget.apresentar.toStringAsFixed(1)}%",
+                        widget.taskComplete
+                            ? "Concluido"
+                            : "Realizado: ${widget.apresentar.toStringAsFixed(1)}%",
                         style: const TextStyle(fontSize: 20),
                       ),
                     )
